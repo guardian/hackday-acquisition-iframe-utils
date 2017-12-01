@@ -24,6 +24,11 @@ export const sources = {
     WEB: 'GUARDIAN_WEB',
     IOS: 'GUARDIAN_APP_IOS',
     ANDROID: 'GUARDIAN_APP_ANDROID',
+    EMAIL: 'EMAIL',
+    SOCIAL: 'SOCIAL',
+    SEARCH: 'SEARCH',
+    PPC: 'PPC',
+    DIRECT: 'DIRECT',
 }
 
 type InitialAcquisitionData = {
