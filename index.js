@@ -13,22 +13,22 @@ export const sources = {
     GUARDIAN_WEB: 'GUARDIAN_WEB'
 }
 
-type InitialData = {
+type InitialAcquisitionData = {
     componentId: ?string,
     componentType: ?ComponentType,
     campaignCode: ?string,
     source: ?Source,
 }
 
-type ParentData = {
+type ParentAcquisitionData = {
     source: ?Source,
     referrerUrl: ?string,
     referrerPageviewId: ?string,
 }
 
-// Source may be provided initiall e.g. if the component is being used in an email
+// Source may be provided initially e.g. if the component is being used in an email
 // or provided by the parent e.g. the component is being embedded in the Guardian website and webviews on App
-type ReferrerAcquisitionData = InitialData & ParentData;
+type ReferrerAcquisitionData = InitialAcquisitionData & ParentAcquisitionData;
 
 const PARENT_DATA_REQUEST = 'acquisition-data-request';
 const PARENT_DATA_RESPONSE = 'acquisition-data-response';
@@ -83,7 +83,7 @@ function deserializeEventData(event: MessageEvent): ?Object {
     }
 }
 
-function requestParentData(): void {
+function requestParentAcquisitionData(): void {
     const message = { type:  PARENT_DATA_REQUEST };
     window.parent.postMessage(JSON.stringify(message), '*');
     window.addEventListener('message', function(event) {
@@ -92,7 +92,7 @@ function requestParentData(): void {
         }
         const data = deserializeEventData(event);
         if (data && data.type === PARENT_DATA_RESPONSE) {
-            upsertAcquisitionDataInUrls(data.parentData);
+            upsertAcquisitionDataInUrls(data.parentAcquisitionData);
         }
     })
 }
@@ -110,18 +110,13 @@ export function enrichLinks(data: ReferrerAcquisitionData): void {
     initPolyfill();
     upsertAcquisitionDataInUrls(data);
     if (isInIframe()) {
-        requestParentData();
+        requestParentAcquisitionData();
     }
-}
-
-type ReferrerData = {
-    referrerPageviewId: ?string,
-    referrerUrl: string,
 }
 
 export function respondToIFrameRequest(
     getIframeElements: MessageEvent => HTMLIFrameElement[],
-    getParentData: void => ReferrerData
+    getParentAcquisitionData: void => ParentAcquisitionData
 ): void {
     window.addEventListener('message', function(event: MessageEvent) {
         const data = deserializeEventData(event)
@@ -129,7 +124,7 @@ export function respondToIFrameRequest(
             getIframeElements(event).forEach(el => {
                 const message = {
                     type: PARENT_DATA_RESPONSE,
-                    parentData: getParentData()
+                    parentAcquisitionData: getParentAcquisitionData()
                 }
                 el.contentWindow.postMessage(JSON.stringify(message), '*')
             })
