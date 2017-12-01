@@ -92,7 +92,7 @@ function requestParentAcquisitionData(): void {
         }
         const data = deserializeEventData(event);
         if (data && data.type === PARENT_DATA_RESPONSE) {
-            upsertAcquisitionDataInUrls(data.parentAcquisitionData);
+            upsertAcquisitionDataInUrls(data.acquisitionData);
         }
     })
 }
@@ -124,7 +124,7 @@ export function respondToIFrameRequest(
             getIframeElements(event).forEach(el => {
                 const message = {
                     type: PARENT_DATA_RESPONSE,
-                    parentAcquisitionData: getParentAcquisitionData()
+                    acquisitionData: getParentAcquisitionData()
                 }
                 el.contentWindow.postMessage(JSON.stringify(message), '*')
             })
