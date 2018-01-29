@@ -4,7 +4,7 @@ This package facilitates adding an `acquisitionData` field to the query string o
 
 The latest version is available at:
 
-`https://interactive.guim.co.uk/libs/acquisition-iframe-tracking/0.0.1/index.bundle.js`
+`https://interactive.guim.co.uk/libs/acquisition-iframe-tracking/0.0.2/index.bundle.js`
 
 ## Example
 
